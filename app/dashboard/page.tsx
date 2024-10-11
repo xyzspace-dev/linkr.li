@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getCookie, getSession, getUserData, requireLogin } from "../../backend/actions";
-import { AUTHURL } from "../../config.json";
+import { deleteSession, getCookie, getSession, getUserData, hasCookie, requireLogin } from "../../backend/actions";
+import { APP_URL, AUTHURL } from "../../config";
 import { Spinner } from "@nextui-org/spinner";
-import { Tabs, Tab, Chip } from "@nextui-org/react";
+import { Tabs, Tab, Chip, Button } from "@nextui-org/react";
 import Icon from "@/components/boxicon";
 import { DashHome } from "@/components/dashboard-home";
+import { DashSettings } from "@/components/dashboard-settings";
 
 interface UserData {
     UserID: string;
@@ -26,55 +27,72 @@ export default function Home() {
     };
 
 
+
+    async function logout() {
+        const cookie = await getCookie().catch((err) => {
+            return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
+        });
+        await deleteSession(cookie?.value).catch((err) => {
+            return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
+        });
+        return window.open(process.env.NEXTAPP_URL, "_self");
+    }
+
+
+
     useEffect(() => {
         async function checkAuth() {
-            if (await getCookie()) {
+
+            if (await hasCookie()) {
                 const cookie = await getCookie().catch((err) => {
-                    return requireLogin(window.open(AUTHURL, "_self"));
+                    return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
                 });
+
+                if (!cookie) {
+                    return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
+                }
+
                 const session = await getSession(cookie?.value).catch((err) => {
-                    return requireLogin(window.open(AUTHURL, "_self"));
+                    return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
                 });
                 if (!session) {
-                    window.open(AUTHURL, "_self");
+                    return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
                 }
-                setLoading(false);
+
+                try {
+                    const cookie = await getCookie().catch((err) => {
+                        return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
+                    });
+                    const user = await getUserData(cookie?.value).catch((err) => {
+                        return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
+                    });
+
+
+
+                    if (!user || !user.UUID) {
+                        return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
+                    } else {
+                        setUserData({
+                            UserID: user?.UserID,
+                            UUID: user?.UUID,
+                            Email: user?.Email,
+                            RefreshToken: user?.RefreshToken,
+                            AccessToken: user?.AccessToken,
+                            Links: user?.Links,
+                        });
+
+                    }
+                } catch (err) {
+                    return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
+                } finally {
+                    setLoading(false);
+                }
+
             } else {
-                window.open(AUTHURL, "_self");
+                return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
             }
         }
         checkAuth();
-    }, []);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const cookie = await getCookie().catch((err) => {
-                    return requireLogin(window.open(AUTHURL, "_self"));
-                });
-                const user = await getUserData(cookie?.value).catch((err) => {
-                    return requireLogin(window.open(AUTHURL, "_self"));
-                });
-                if (!user || !user.UUID) {
-                    requireLogin(window.open(AUTHURL, "_self"));
-                } else {
-                    setUserData({
-                        UserID: user?.UserID,
-                        UUID: user?.UUID,
-                        Email: user?.Email,
-                        RefreshToken: user?.RefreshToken,
-                        AccessToken: user?.AccessToken,
-                        Links: user?.Links,
-                    });
-                }
-            } catch (err) {
-                requireLogin(window.open(AUTHURL, "_self"));
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUserData();
     }, []);
 
     while (loading) {
@@ -89,13 +107,18 @@ export default function Home() {
         <>
             <nav>
                 <div className="flex w-full flex-col">
+                    <div className="ml-auto">
+                        <Button onClick={() => (logout())}>
+                            <Icon name="bx-log-out" size="18px" />
+                            Logout
+                        </Button>
+                    </div>
                     <Tabs
                         aria-label="Options"
                         color="primary"
                         variant="underlined"
                         selectedKey={currentTab}
-                        // Fix the type of onSelectionChange
-                        onSelectionChange={setCurrentTab}
+                        onSelectionChange={(key) => setCurrentTab(key.toString())}
                         classNames={{
                             tabList: "gap-6 w-full relative rounded-none p-0 border-b border-divider",
                             cursor: "w-full bg-[#22d3ee]",
@@ -114,7 +137,12 @@ export default function Home() {
                                 </div>
                             }
                         >
-                            <DashHome changeTab={changeTab} AccessToken={userData?.AccessToken as string} Links={userData?.Links as [string]} UserID={userData?.UserID as string} />
+                            <DashHome
+                                UserID={userData?.UserID ?? ""}
+                                Links={userData?.Links ?? []}
+                                AccessToken={userData?.AccessToken ?? ""}
+                                changeTab={changeTab}
+                            />
                         </Tab>
                         <Tab
                             key="links"
@@ -128,7 +156,46 @@ export default function Home() {
                             }
                         >
                         </Tab>
+                        <Tab
+                            key="setting"
+                            onClick={() => changeTab("links")}
+                            title={
+                                <div className="flex items-center space-x-2">
+                                    <Icon name="bx-cog" size="18px" />
+                                    <span>Setting</span>
+
+                                </div>
+                            }
+                        >
+                            <DashSettings
+                                UserID={userData?.UserID ?? ""}
+                                Links={userData?.Links ?? []}
+                                AccessToken={userData?.AccessToken ?? ""}
+                                changeTab={changeTab}
+                            />
+                        </Tab>
+                        {
+                            process.env.NEXTADMINID == userData?.UserID ? (
+                                <Tab
+                                    key="admin"
+                                    onClick={() => changeTab("links")}
+                                    title={
+                                        <div className="flex items-center space-x-2 text-gray-500">
+                                            <Icon name="bx-command" size="18px" />
+                                            <span>Admin</span>
+
+                                        </div>
+                                    }
+                                >
+                                </Tab>
+                            ) : null
+
+                        }
+
+
                     </Tabs>
+
+
                 </div>
             </nav>
         </>

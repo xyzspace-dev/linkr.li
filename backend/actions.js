@@ -5,7 +5,7 @@ import sessionDB from "./database/sessionDB";
 import { error } from "console";
 const { v4: uuidv4 } = require("uuid");
 const uuids = uuidv4();
-const { MONGODBURL, AUTHURL } = require("@/config.json");
+const { MONGODBURL, AUTHURL } = require("@/config");
 
 async function connectDB() {
   connect(MONGODBURL, {
@@ -84,6 +84,15 @@ async function updateUser(userID, atoken, rtoken, email) {
       Email: email,
     }
   );
+}
+
+async function deleteUser(userID) {
+  const userDB = require("./database/usersDB");
+
+  await connectDB();
+  await userDB.deleteOne({
+    UserID: userID,
+  });
 }
 
 async function getLink(link) {
@@ -187,9 +196,23 @@ async function getSession(sessionID) {
   };
 }
 
+async function deleteSession(sessionID) {
+  await connectDB();
+  const sessionDB = require("./database/sessionDB");
+
+  await sessionDB.deleteMany({
+    UUID: sessionID,
+  });
+}
+
 async function getCookie() {
   const cookie = cookies();
   return cookie.get("session");
+}
+
+async function hasCookie() {
+  const cookie = cookies();
+  return cookie.has("session");
 }
 
 async function createCookie(uuid) {
@@ -197,6 +220,11 @@ async function createCookie(uuid) {
   cookie.set("session", uuid, {
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10),
   });
+}
+
+async function deleteCookie(key) {
+  const cookie = cookies();
+  cookie.delete(key);
 }
 
 async function requireLogin(redirect) {
@@ -219,10 +247,14 @@ export {
   createLink,
   deleteLink,
   getLinks,
+  deleteUser,
   getUserData,
   createSession,
   getSession,
   getCookie,
+  hasCookie,
   createCookie,
   updateUser,
+  deleteCookie,
+  deleteSession,
 };

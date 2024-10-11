@@ -56,6 +56,7 @@
 		"@react-aria/ssr": "3.9.4",
 		"@react-aria/visually-hidden": "3.8.12",
 		"axios": "^1.7.7",
+		"bootstrap-icons": "^1.11.3",
 		"boxicons": "^2.1.4",
 		"clsx": "2.1.1",
 		"discord-oauth2": "^2.12.1",

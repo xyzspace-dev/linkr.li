@@ -11,7 +11,7 @@ import {
   DISCORD_CLIENTID,
   DISCORD_CLIENTSECRET,
   DISCORD_REDIRECTURI,
-} from "@/config.json";
+} from "@/config";
 const DiscordOauth2 = require("discord-oauth2");
 const { v4: uuidv4 } = require("uuid");
 const uuids = uuidv4();
