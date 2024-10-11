@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from 'react';
 const DiscordOauth2 = require("discord-oauth2");
 const oauth = new DiscordOauth2();
-import { AUTHURL } from '@/config.json';
+import { AUTHURL } from '@/config';
 import Icon from './boxicon';
 
 interface DashHomeProps {
