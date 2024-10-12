@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . /app
 RUN cd /app && npm install -g npm@latest
 RUN cd /app && npm install
-RUN cd /app && npm run build
+# RUN cd /app && npm run build
 
 
 ENV MONGODBURL=0
@@ -19,4 +19,4 @@ ENV DISCORD_REDIRECTURI=0
 ENV AUTHURL=0
 ENV ADMINID=0
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "dev" ]
