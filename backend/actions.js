@@ -3,6 +3,7 @@ import { connect } from "mongoose";
 import { cookies } from "next/headers";
 import sessionDB from "./database/sessionDB";
 import { error } from "console";
+import { Adamina } from "next/font/google";
 const { v4: uuidv4 } = require("uuid");
 const uuids = uuidv4();
 const { MONGODBURL, AUTHURL } = require("@/config");
@@ -42,6 +43,7 @@ async function getUserData(sessionID) {
     RefreshToken: userData?.RefreshToken,
     AccessToken: userData?.AccessToken,
     Links: userData?.Links,
+    Admin: userData?.Admin,
   };
 }
 async function getUser(userID) {
@@ -95,6 +97,62 @@ async function deleteUser(userID) {
   });
 }
 
+async function getHosts(url) {
+  const hostDB = require("./database/hostDB");
+
+  const hostData = await hostDB.find({}).sort();
+
+  return hostData.map((host) => {
+    return {
+      UUID: host.UUID,
+      URL: host.URL,
+      APIKey: host.APIKey,
+    };
+  });
+}
+
+async function createHost(url, apikey, uuid) {
+  const hostDB = require("./database/hostDB");
+
+  await hostDB.create({
+    UUID: uuid,
+    URL: url,
+    APIKey: apikey,
+  });
+
+  return "Host Created";
+}
+
+async function getHost(url) {
+  const hostDB = require("./database/hostDB");
+
+  const hostData = await hostDB.findOne({
+    URL: url,
+  });
+
+  return {
+    UUID: hostData?.UUID,
+    URL: hostData?.URL,
+    APIKey: hostData?.APIKey,
+  };
+}
+
+async function deleteHost(uuid) {
+  const hostDB = require("./database/hostDB");
+
+  await hostDB.deleteOne({
+    UUID: uuid,
+  });
+}
+
+async function deleteHostLinks(uuid) {
+  const linkDB = require("./database/linksDB");
+
+  await linkDB.deleteMany({
+    Host: uuid,
+  });
+}
+
 async function getLink(link) {
   const linkDB = require("./database/linksDB");
 
@@ -102,10 +160,34 @@ async function getLink(link) {
     Slug: link,
   });
 
-  return linkData;
+  return {
+    UUID: linkData?.UUID,
+    UserID: linkData?.UserID,
+    Slug: linkData?.Slug,
+    Redirect: linkData?.Redirect,
+    URL: linkData?.URL,
+    Host: linkData?.Host,
+  };
 }
 
-async function createLink(userID, slug, redirect, uuid) {
+async function getLinks() {
+  const linkDB = require("./database/linksDB");
+
+  const linkData = await linkDB.find({}).sort();
+
+  return linkData.map((link) => {
+    return {
+      UUID: link?.UUID,
+      UserID: link?.UserID,
+      Slug: link?.Slug,
+      Redirect: link?.Redirect,
+      URL: link?.URL,
+      Host: link?.Host,
+    };
+  });
+}
+
+async function createLink(userID, slug, redirect, uuid, host) {
   const linkDB = require("./database/linksDB");
   const userDB = require("./database/usersDB");
 
@@ -114,6 +196,8 @@ async function createLink(userID, slug, redirect, uuid) {
     UUID: uuid,
     Slug: slug,
     Redirect: redirect,
+    URL: host + "/" + slug,
+    Host: host,
   });
 
   await userDB.findOneAndUpdate(
@@ -152,23 +236,41 @@ async function deleteLink(userID, slug) {
   );
 }
 
-async function getLinks(userID) {
-  const userDB = require("./database/usersDB");
+async function getLinkfromAPI(slug, key) {
   const linkDB = require("./database/linksDB");
 
-  const userData = await userDB.findOne({
-    UserID: userID,
+  const hostDB = require("./database/hostDB");
+
+  const hostData = await hostDB.findOne({
+    APIKey: key,
   });
 
-  const links = userData.Links;
+  const linkData = await linkDB.findOne({
+    Host: hostData.UUID,
+    Slug: slug,
+  });
 
-  const linksData = await linkDB.find({
-    UUID: {
-      $in: links,
+  return {
+    UUID: linkData?.UUID,
+    UserID: linkData?.UserID,
+    Slug: linkData?.Slug,
+    Redirect: linkData?.Redirect,
+    URL: linkData?.URL,
+    Host: linkData?.Host,
+  };
+}
+async function editLink(userID, slug, redirect) {
+  const linkDB = require("./database/linksDB");
+
+  await linkDB.findOneAndUpdate(
+    {
+      Slug: slug,
+      UserID: userID,
     },
-  });
-
-  return linksData;
+    {
+      Redirect: redirect,
+    }
+  );
 }
 
 async function createSession(userID, uuid) {
@@ -239,22 +341,40 @@ async function requireLogin(redirect) {
   return redirect;
 }
 
+async function getAuthCode(key) {
+  const hostDB = require("./database/hostDB");
+
+  const hostData = await hostDB.findOne({
+    APIKey: key,
+  });
+
+  return hostData;
+}
+
 export {
   getUser,
+  getAuthCode,
+  getHosts,
   createUser,
   requireLogin,
   getLink,
   createLink,
   deleteLink,
-  getLinks,
+  deleteHost,
+  deleteHostLinks,
   deleteUser,
   getUserData,
   createSession,
+  getLinks,
   getSession,
   getCookie,
+  editLink,
   hasCookie,
   createCookie,
   updateUser,
+  getLinkfromAPI,
+  getHost,
   deleteCookie,
+  createHost,
   deleteSession,
 };

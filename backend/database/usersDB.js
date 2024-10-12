@@ -8,6 +8,7 @@ const userSchema = new Schema({
   Links: [String],
   RefreshToken: String,
   AccessToken: String,
+  Admin: Boolean,
 });
 
 module.exports = models.user || model("user", userSchema);

@@ -7,6 +7,8 @@ import { Tabs, Tab, Chip, Button } from "@nextui-org/react";
 import Icon from "@/components/boxicon";
 import { DashHome } from "@/components/dashboard-home";
 import { DashSettings } from "@/components/dashboard-settings";
+import { DashAdmin } from "@/components/dashboard-admin";
+import { DashLinks } from "@/components/dashboard-links";
 
 interface UserData {
     UserID: string;
@@ -15,6 +17,7 @@ interface UserData {
     RefreshToken: string;
     AccessToken: string;
     Links: any[];
+    Admin?: boolean;
 }
 
 export default function Home() {
@@ -25,8 +28,6 @@ export default function Home() {
     const changeTab = (key: string) => {
         setCurrentTab(key);
     };
-
-
 
     async function logout() {
         const cookie = await getCookie().catch((err) => {
@@ -79,6 +80,7 @@ export default function Home() {
                             RefreshToken: user?.RefreshToken,
                             AccessToken: user?.AccessToken,
                             Links: user?.Links,
+                            Admin: user?.Admin
                         });
 
                     }
@@ -155,10 +157,17 @@ export default function Home() {
                                 </div>
                             }
                         >
+
+                            <DashLinks
+                                UserID={userData?.UserID ?? ""}
+                                UUID={userData?.UUID ?? ""}
+                                changeTab={changeTab}
+                            />
+
                         </Tab>
                         <Tab
                             key="setting"
-                            onClick={() => changeTab("links")}
+                            onClick={() => changeTab("setting")}
                             title={
                                 <div className="flex items-center space-x-2">
                                     <Icon name="bx-cog" size="18px" />
@@ -167,6 +176,9 @@ export default function Home() {
                                 </div>
                             }
                         >
+
+
+
                             <DashSettings
                                 UserID={userData?.UserID ?? ""}
                                 Links={userData?.Links ?? []}
@@ -178,19 +190,51 @@ export default function Home() {
                             process.env.NEXTADMINID == userData?.UserID ? (
                                 <Tab
                                     key="admin"
-                                    onClick={() => changeTab("links")}
+                                    onClick={() => changeTab("admin")}
                                     title={
                                         <div className="flex items-center space-x-2 text-gray-500">
                                             <Icon name="bx-command" size="18px" />
-                                            <span>Admin</span>
+                                            <span>Hosts</span>
 
                                         </div>
                                     }
                                 >
+                                    <DashAdmin
+                                        UserID={userData?.UserID ?? ""}
+                                        Links={userData?.Links ?? []}
+                                        AccessToken={userData?.AccessToken ?? ""}
+                                        changeTab={changeTab}
+                                        isAdmin={process.env.NEXTADMINID == userData?.UserID ? true : false}
+                                    />
                                 </Tab>
                             ) : null
 
+
+
                         }
+
+                        {userData?.Admin ? (
+
+                            <Tab
+                                key="admin"
+                                onClick={() => changeTab("admin")}
+                                title={
+                                    <div className="flex items-center space-x-2 text-gray-500">
+                                        <Icon name="bx-command" size="18px" />
+                                        <span>Hosts</span>
+
+                                    </div>
+                                }
+                            >
+                                <DashAdmin
+                                    UserID={userData?.UserID ?? ""}
+                                    Links={userData?.Links ?? []}
+                                    AccessToken={userData?.AccessToken ?? ""}
+                                    changeTab={changeTab}
+                                    isAdmin={userData?.Admin ?? false}
+                                />
+                            </Tab>
+                        ) : null}
 
 
                     </Tabs>
