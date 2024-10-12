@@ -1,12 +1,12 @@
 FROM node:21
 
-WORKDIR /app/manager
+WORKDIR /app
 
 # Install app dependencies
-COPY . app/manager
-RUN cd app/manager && npm install -g npm@latest
-RUN cd app/manager && npm install
-RUN cd app/manager && npm install build
+COPY . /app
+RUN cd /app && npm install -g npm@latest
+RUN cd /app && npm install
+RUN cd /app && npm install build
 
 
 ENV MONGODBURL=0

@@ -1,11 +1,11 @@
 FROM node:21
 
-WORKDIR /app/server
+WORKDIR /app
 
 # Install app dependencies
-COPY . app/server
-RUN cd app/server && npm install -g npm@latest
-RUN cd app/server && npm install
+COPY . /app
+RUN cd /app && npm install -g npm@latest
+RUN cd /app && npm install
 
 ENV URL_SERVER_PORT=0
 ENV LINKHOSTURL=0
