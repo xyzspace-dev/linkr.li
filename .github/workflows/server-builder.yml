@@ -54,4 +54,4 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/nexocrew-HQ/linkrli-server:${{ steps.package-version.outputs.current-version}}
+            ghcr.io/nexocrew-hq/linkrli-server:${{ steps.package-version.outputs.current-version}}
