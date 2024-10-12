@@ -9,4 +9,5 @@ module.exports = {
   ADMINID: process.env.ADMINID,
   URL_SERVER_PORT: process.env.URL_SERVER_PORT,
   API_KEY: process.env.API_KEY,
+  LOGINOPEN: process.env.LOGINOPEN,
 };

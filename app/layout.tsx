@@ -47,6 +47,7 @@ export default function RootLayout({
           href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
           rel="stylesheet"
         ></link>
+
       </head>
       <body
         className={clsx(
@@ -82,13 +83,43 @@ export default function RootLayout({
                   </Link> - All rights reserved.
                 </p>
                 <p className="text-gray-400 text-sm">
-                  <Link href="/terms" className="text-gray-400 hover:underline">
-                    Terms of Service
-                  </Link>{" "}
-                  |{" "}
-                  <Link href="/privacy" className="text-gray-400 hover:underline">
-                    Privacy Policy
-                  </Link>
+                  {
+
+                    process.env.TERMS_PAGE && (
+                      <Link href={process.env.TERMS_PAGE} className="text-gray-400 hover:underline">
+                        Terms of Service
+                      </Link>
+
+                    )
+
+                  }
+
+                  {
+
+                    process.env.PRIVACY_PAGE && (
+                      <Link href={process.env.PRIVACY_PAGE} className="text-gray-400 hover:underline">
+                        Privacy Policy
+                      </Link>
+
+                    )
+
+                  }
+
+
+                  {
+
+                    process.env.IMPRINT_PAGE && (
+                      < Link href={process.env.IMPRINT_PAGE} className="text-gray-400 hover:underline">
+                        Imprint
+                      </Link>
+
+                    )
+
+                  }
+
+
+
+
                 </p>
               </div>
             </footer>

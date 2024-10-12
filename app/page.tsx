@@ -1,3 +1,4 @@
+"use client";
 import { Link } from "@nextui-org/link";
 import { Snippet } from "@nextui-org/snippet";
 import { Code } from "@nextui-org/code";
@@ -11,6 +12,13 @@ import { Button } from "@nextui-org/button";
 export default function Home() {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      {
+
+        process.env.NEXTDEFAULT_PAGE && (
+          window.location.href = process.env.NEXTDEFAULT_PAGE
+        )
+
+      }
       <div className="inline-block max-w-xl text-center justify-center">
         <span className={title()}>Create&nbsp;</span>
         <span className={title({ color: "violet" })}>short&nbsp;</span>

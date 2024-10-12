@@ -9,7 +9,7 @@ const PORT = URL_SERVER_PORT || 3001;
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "No slug found" });
+  res.redirect(process.env.DEFAULT_PAGE)
 });
 
 app.get("/:slug", async (req, res) => {

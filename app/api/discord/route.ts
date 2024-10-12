@@ -34,6 +34,45 @@ export async function GET(req: Request) {
   const member = await oauth.getUser(data.access_token);
   const user = await getUser(member.id);
 
+  if (process.env.NEXTLOGINOPEN) {
+    if (process.env.ADMINID == member.id) {
+      if (!user) {
+        await createUser(
+          member.id,
+          member.email,
+          data.refresh_token,
+          data.access_token
+        );
+      }
+
+      if (user) {
+        await updateUser(
+          member.id,
+          data.access_token,
+          data.refresh_token,
+          member.email
+        );
+      }
+
+      await createSession(member.id, uuids);
+      await createCookie(uuids);
+
+      return Response.redirect(new URL("/dashboard", process.env.NEXTAPP_URL));
+    } else {
+      return new Response(
+        JSON.stringify({
+          error: "You are not authorized to access this page",
+        }),
+        {
+          status: 401,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+  }
+
   if (!user) {
     await createUser(
       member.id,
@@ -55,5 +94,5 @@ export async function GET(req: Request) {
   await createSession(member.id, uuids);
   await createCookie(uuids);
 
-  return Response.redirect(new URL("/dashboard", req.url));
+  return Response.redirect(new URL("/dashboard", process.env.NEXTAPP_URL));
 }

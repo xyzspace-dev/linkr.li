@@ -44,6 +44,10 @@ export default function Home() {
     useEffect(() => {
         async function checkAuth() {
 
+            if (process.env.NEXTLOGINOPEN) {
+                return window.open(process.env.NETXAUTHURL, "_self");
+            }
+
             if (await hasCookie()) {
                 const cookie = await getCookie().catch((err) => {
                     return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
