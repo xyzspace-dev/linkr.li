@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  manager:
+    image: ghcr.io/nexocrew-hq/linkrli-manager:0.0.1
+    container_name: linkrli-manager
+    environment:
+      - MONGODBURL=YOUR_MONGODB_URL
+      - APP_URL=YOUR_APP_URL
+      # SOON in use!
+      # MANAGER_API_KEY=
+      - DISCORD_CLIENTID=YOUR_CLIENTID
+      - DISCORD_CLIENTSECRET=YOUR_CLIENTSECRET
+      - DISCORD_REDIRECTURI=YOUR_REDIRECTURI
+      - AUTHURL=YOUR_AUTHURL
+      - ADMINID=YOUR_ADMIN
+    ports:
+      - 2354:3000
+  server:
+    image: ghcr.io/nexocrew-hq/linkrli-server:0.0.1
+    container_name: linkrli-server
+    environment:
+      - URL_SERVER_PORT=YOUR_SERVER_PORT
+      - LINKHOSTURL=YOUR_LINKHOST
+      - API_KEY=YOUR_API_KEY
+    ports:
+      - 2354:3001
