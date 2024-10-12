@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . /app
 RUN cd /app && npm install -g npm@latest
 RUN cd /app && npm install
-RUN cd /app && npm install build
+RUN cd /app && npm run build
 
 
 ENV MONGODBURL=0
