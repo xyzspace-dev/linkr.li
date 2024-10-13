@@ -34,7 +34,7 @@ export async function GET(req: Request) {
   let member = await oauth.getUser(data.access_token);
   let user = await getUser(member.id);
 
-  if (process.env.NEXTLOGINOPEN) {
+  if (process.env.NEXTLOGINOPEN == 'true') {
     if (process.env.ADMINID == member.id) {
       if (!user) {
         await createUser(
