@@ -12,13 +12,6 @@ import { Button } from "@nextui-org/button";
 export default function Home() {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      {
-
-        process.env.NEXTDEFAULT_PAGE && (
-          window.location.href = process.env.NEXTDEFAULT_PAGE
-        )
-
-      }
       <div className="inline-block max-w-xl text-center justify-center">
         <span className={title()}>Create&nbsp;</span>
         <span className={title({ color: "violet" })}>short&nbsp;</span>
@@ -31,8 +24,26 @@ export default function Home() {
         {/* Call to Action Button */}
         <div className="mt-6">
           <Link href="/dashboard">
-            <Button className="">Get Started</Button>
+            <Button className="transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-violet-500" aria-label="Get started with link creation">
+              Get Started
+            </Button>
           </Link>
+        </div>
+      </div>
+
+      {/* Benefits Section */}
+      <div className="mt-12 max-w-xl text-center">
+        <h2 className={title()}>Why Use Our Link Shortener?</h2>
+        <div className={subtitle({ class: "mt-4" })}>
+          Our platform allows you to shorten long URLs quickly and efficiently. Whether you're sharing links on social media, in emails, or anywhere else, short links make it easier for your audience to access the content you want to share.
+        </div>
+        <div className={subtitle({ class: "mt-2" })}>
+          <strong>Key Benefits:</strong>
+          <ul className="list-disc list-inside mt-2 text-left">
+            <li>✨ Enhanced Tracking: Monitor the performance of your links with detailed analytics.</li>
+            <li>🔗 Customization: Personalize your short links to reflect your brand.</li>
+            <li>🔒 Security: Enjoy peace of mind with secure link sharing.</li>
+          </ul>
         </div>
       </div>
 
@@ -42,8 +53,19 @@ export default function Home() {
         <div className={subtitle({ class: "mt-4" })}>
           It's simple! Just sign in with your Discord account, create short links, and share them with the world.
         </div>
+        <div className={subtitle({ class: "mt-2" })}>
+          Follow these easy steps:
+          <ol className="list-decimal list-inside mt-2 text-left">
+            <li>Sign in using your Discord account for a seamless experience.</li>
+            <li>Create short links in just a few clicks.</li>
+            <li>Share your short links anywhere you want!</li>
+          </ol>
+        </div>
+        <Link href="/docs" className="mt-4 text-violet-600 hover:underline" aria-label="Learn more about how it works">
+          Learn more about how it works
+        </Link>
       </div>
-
     </section>
+
   );
 }

@@ -24,6 +24,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/docs",
+        destination: "https://docs.nexocrew.com",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
