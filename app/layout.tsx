@@ -68,7 +68,7 @@ export default function RootLayout({
               <div className="container mx-auto text-center">
                 <div className="flex justify-center space-x-4 mb-4">
                   <ul className="flex space-x-4">
-                    <li> <Link href="inline https://nexocrew.com/discord">
+                    <li> <Link className="inline" href="https://nexocrew.com/discord">
                       <DiscordIcon className="text-gray-400"></DiscordIcon>
                     </Link></li>
                     <li> <Link href="https://github.com/nexocrew-hq/linkr.li">
