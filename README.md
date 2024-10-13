@@ -27,3 +27,9 @@ linkr.li is licensed under GPL v3. For more information, check the LICENSE file.
 ## Contact 📬
 
 For questions or support, reach out to us at [nexocrew.com/discord](https://nexocrew.com/discord).
+
+## Roadmap 💡
+
+- [ ] Add a Chrome extension
+- [ ] Add Analytics 
+- [ ] Add more services
