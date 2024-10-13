@@ -100,18 +100,21 @@ export function DashHome({ UserID, Links, AccessToken, changeTab }: DashHomeProp
                     ) : (
                         <div className="w-full max-w-sm bg-zinc-600 shadow-xl rounded-xl text-gray-900">
                             <div className="rounded-t-lg h-32 overflow-hidden">
-                                <Image
-                                    className="object-cover object-top w-full"
-                                    src={`https://cdn.discordapp.com/banners/${useAPIData?.ID}/${useAPIData?.Banner}.webp?size=1024`}
-                                    alt="banner"
-                                    width={200}
-                                    height={200}
-                                />
+                                {useAPIData?.Banner ? (
+                                    <Image
+                                        className="object-cover object-top w-full"
+                                        src={`https://cdn.discordapp.com/banners/${useAPIData?.ID}/${useAPIData?.Banner}.webp?size=1024`}
+                                        alt="banner"
+                                        width={200}
+                                        height={200}
+                                    />
+                                ) : (
+                                    null)}
                             </div>
                             <div className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
                                 <Image
                                     className="object-cover object-center h-32"
-                                    src={`https://cdn.discordapp.com/avatars/${useAPIData?.ID}/${useAPIData?.Avatar}.png?size=512`}
+                                    src={useAPIData?.Avatar ? `https://cdn.discordapp.com/avatars/${useAPIData?.ID}/${useAPIData?.Avatar}.png?size=512` : "/linkapp.png"}
                                     alt="profile"
                                     width={200}
                                     height={200}

@@ -190,6 +190,7 @@ export default function Home() {
                                 UserID={userData?.UserID ?? ""}
                                 UUID={userData?.UUID ?? ""}
                                 changeTab={changeTab}
+                                Links={userData?.Links ?? []}
                             />
 
                         </Tab>

@@ -11,6 +11,7 @@ interface DashLinksProps {
     UserID: string;
     UUID: string;
     changeTab: (tab: string) => void;
+    Links: Array<any>;
 }
 
 interface Links {
@@ -28,7 +29,7 @@ interface Hosts {
     APIKey: string;
 }
 
-export function DashLinks({ UserID, UUID, changeTab }: DashLinksProps): JSX.Element {
+export function DashLinks({ UserID, UUID, changeTab, Links }: DashLinksProps): JSX.Element {
     const [loading, setLoading] = useState(true);
     const [linksData, setLinks] = useState<Links[]>([]);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -48,7 +49,7 @@ export function DashLinks({ UserID, UUID, changeTab }: DashLinksProps): JSX.Elem
                 return;
             }
 
-            const links = await getLinks();
+            const links = await getLinks(UserID);
             setLinks(links);
             const hosts = await getHosts();
             setHost(hosts);

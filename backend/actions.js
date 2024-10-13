@@ -170,10 +170,10 @@ async function getLink(link) {
   };
 }
 
-async function getLinks() {
+async function getLinks(userID) {
   const linkDB = require("./database/linksDB");
 
-  const linkData = await linkDB.find({}).sort();
+  const linkData = await linkDB.find({ UserID: userID }).sort();
 
   return linkData.map((link) => {
     return {
