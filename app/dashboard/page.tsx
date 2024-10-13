@@ -37,7 +37,7 @@ export default function Home() {
             return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
         });
 
-        await await deleteSession(member.UserID);
+        await deleteSession(member.UserID);
         return window.open(process.env.NEXTAPP_URL, "_self");
     }
 
