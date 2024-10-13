@@ -14,7 +14,7 @@ services:
       - ADMINID=YOUR_ADMIN
       - DEFAULT_PAGE=https://links.xyzjesper.link/get-started
       - IMPRINT_PAGE=
-      - PRIVACY_PAGE=h
+      - PRIVACY_PAGE=
       - TERMS_PAGE=
       # OR remove the LOGINOPEN to open it.
       - LOGINOPEN=false
