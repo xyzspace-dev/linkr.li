@@ -130,7 +130,7 @@ export default function Home() {
 
                         <Button onClick={() => (logout())}>
                             <Icon name="bx-log-out" size="18px" />
-                            Logout
+                            Logout 
                         </Button>
                         <p className="inline ml-3"></p>
 
