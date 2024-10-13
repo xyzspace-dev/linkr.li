@@ -27,7 +27,7 @@ export async function GET(req: Request) {
     code: code,
     scope: "identify guilds",
     grantType: "authorization_code",
-
+ 
     redirectUri: DISCORD_REDIRECTURI,
   });
 
