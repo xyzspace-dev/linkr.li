@@ -134,9 +134,11 @@ export default function Home() {
                         </Button>
                         <p className="inline ml-3"></p>
 
+                        {/* onClick={() => (copyData())} */}
                         <Button
                             suppressHydrationWarning={true}
-                            onClick={() => (copyData())}>
+                            disabled
+                        >
                             <Icon name="bx-copy" size="18px" />
                             Extension Login
                         </Button>
