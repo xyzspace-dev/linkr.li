@@ -7,13 +7,17 @@ services:
     environment:
       - MONGODBURL=YOUR_MONGODB_URL
       - APP_URL=YOUR_APP_URL
-      # SOON in use!
-      # MANAGER_API_KEY=
       - DISCORD_CLIENTID=YOUR_CLIENTID
       - DISCORD_CLIENTSECRET=YOUR_CLIENTSECRET
       - DISCORD_REDIRECTURI=YOUR_REDIRECTURI
       - AUTHURL=YOUR_AUTHURL
       - ADMINID=YOUR_ADMIN
+      - DEFAULT_PAGE=https://links.xyzjesper.link/get-started
+      - IMPRINT_PAGE=
+      - PRIVACY_PAGE=
+      - TERMS_PAGE=
+      # OR remove the LOGINOPEN to open it.
+      - LOGINOPEN=false
     ports:
       - 2354:3000
   server:
@@ -23,5 +27,6 @@ services:
       - URL_SERVER_PORT=YOUR_SERVER_PORT
       - LINKHOSTURL=YOUR_LINKHOST
       - API_KEY=YOUR_API_KEY
+      - DEFAULT_PAGE=https://links.xyzjesper.link/get-started
     ports:
       - 2354:3001
