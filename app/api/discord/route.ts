@@ -2,6 +2,7 @@ import {
   createCookie,
   createSession,
   createUser,
+  deleteSession,
   getLinks,
   getSession,
   getUser,
@@ -14,7 +15,9 @@ import {
 } from "@/config";
 const DiscordOauth2 = require("discord-oauth2");
 const { v4: uuidv4 } = require("uuid");
-let uuids = uuidv4();
+async function genuuid() {
+  return uuidv4();
+}
 
 export async function GET(req: Request) {
   const code = req.url.split("?code=")[1];
@@ -27,14 +30,14 @@ export async function GET(req: Request) {
     code: code,
     scope: "identify guilds",
     grantType: "authorization_code",
- 
+
     redirectUri: DISCORD_REDIRECTURI,
   });
 
   let member = await oauth.getUser(data.access_token);
   let user = await getUser(member.id);
 
-  if (process.env.NEXTLOGINOPEN == 'true') {
+  if (process.env.NEXTLOGINOPEN == "true") {
     if (process.env.ADMINID == member.id) {
       if (!user) {
         await createUser(
@@ -53,9 +56,10 @@ export async function GET(req: Request) {
           member.email
         );
       }
+      const uuids = await genuuid();
 
-      await createSession(member.id, uuids);
-      await createCookie(uuids);
+      await createSession(member.id, await uuids);
+      await createCookie(await uuids);
 
       return Response.redirect(new URL("/dashboard", process.env.NEXTAPP_URL));
     } else {
@@ -72,7 +76,7 @@ export async function GET(req: Request) {
       );
     }
   }
-
+  const uuids = await genuuid();
   if (!user) {
     await createUser(
       member.id,
@@ -91,6 +95,7 @@ export async function GET(req: Request) {
     );
   }
 
+  await deleteSession(member.id);
   await createSession(member.id, uuids);
   await createCookie(uuids);
 

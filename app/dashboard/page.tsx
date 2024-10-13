@@ -33,9 +33,11 @@ export default function Home() {
         const cookie = await getCookie().catch((err) => {
             return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
         });
-        await deleteSession(cookie?.value).catch((err) => {
+        const member = await getUserData(cookie?.value).catch((err) => {
             return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
         });
+
+        await deleteSession(member.UserID);
         return window.open(process.env.NEXTAPP_URL, "_self");
     }
 
@@ -45,13 +47,10 @@ export default function Home() {
         async function checkAuth() {
 
 
-
             if (await hasCookie()) {
                 const cookie = await getCookie().catch((err) => {
                     return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
                 });
-
-                console.log(cookie);
 
 
                 if (!cookie) {
@@ -68,8 +67,6 @@ export default function Home() {
 
                 }
 
-                console.log(session);
-
                 try {
                     const cookie = await getCookie().catch((err) => {
                         return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
@@ -83,6 +80,7 @@ export default function Home() {
                     if (!user || !user.UUID) {
                         return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
                     } else {
+                        // HERE!
                         setUserData({
                             UserID: user?.UserID,
                             UUID: user?.UUID,
@@ -130,7 +128,7 @@ export default function Home() {
 
                         <Button onClick={() => (logout())}>
                             <Icon name="bx-log-out" size="18px" />
-                            Logout 
+                            Logout
                         </Button>
                         <p className="inline ml-3"></p>
 

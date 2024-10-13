@@ -298,12 +298,12 @@ async function getSession(sessionID) {
   };
 }
 
-async function deleteSession(sessionID) {
+async function deleteSession(userID) {
   await connectDB();
   const sessionDB = require("./database/sessionDB");
 
   await sessionDB.deleteMany({
-    UUID: sessionID,
+    UserID: userID,
   });
 }
 
