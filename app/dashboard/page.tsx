@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { deleteSession, getCookie, getSession, getUserData, hasCookie, requireLogin } from "../../backend/actions";
+import { createCookie, deleteSession, getCookie, getSession, getUserData, hasCookie, requireLogin } from "../../backend/actions";
 import { APP_URL, AUTHURL } from "../../config";
 import { Spinner } from "@nextui-org/spinner";
 import { Tabs, Tab, Chip, Button } from "@nextui-org/react";
@@ -44,25 +44,31 @@ export default function Home() {
     useEffect(() => {
         async function checkAuth() {
 
-            if (process.env.NEXTLOGINOPEN) {
-                return window.open(process.env.NETXAUTHURL, "_self");
-            }
+
 
             if (await hasCookie()) {
                 const cookie = await getCookie().catch((err) => {
                     return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
                 });
 
+                console.log(cookie);
+
+
                 if (!cookie) {
                     return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
                 }
+
+
 
                 const session = await getSession(cookie?.value).catch((err) => {
                     return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
                 });
                 if (!session) {
                     return requireLogin(window.open(process.env.NETXAUTHURL, "_self"));
+
                 }
+
+                console.log(session);
 
                 try {
                     const cookie = await getCookie().catch((err) => {
@@ -109,15 +115,33 @@ export default function Home() {
         );
     }
 
+    async function copyData() {
+        const cookie = await getCookie()
+        await createCookie(cookie?.value)
+
+        const url = process.env.NEXTAPP_URL
+        navigator.clipboard.writeText(btoa(JSON.stringify({ cookie: cookie?.value, url: url })))
+    }
     return (
         <>
             <nav>
                 <div className="flex w-full flex-col">
-                    <div className="ml-auto">
+                    <div className="ml-auto inline">
+
                         <Button onClick={() => (logout())}>
                             <Icon name="bx-log-out" size="18px" />
                             Logout
                         </Button>
+                        <p className="inline ml-3"></p>
+
+                        <Button
+                            suppressHydrationWarning={true}
+                            onClick={() => (copyData())}>
+                            <Icon name="bx-copy" size="18px" />
+                            Extension Login
+                        </Button>
+
+
                     </div>
                     <Tabs
                         aria-label="Options"

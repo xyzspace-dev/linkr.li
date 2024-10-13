@@ -3,6 +3,8 @@
 # linkr.li specific
 config.json
 .env
+chromeextension.crx
+chromeextension.pem
 
 # dependencies
 /node_modules

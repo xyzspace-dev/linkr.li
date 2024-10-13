@@ -47,7 +47,10 @@ export default function RootLayout({
           href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
           rel="stylesheet"
         ></link>
-
+        <meta
+          http-equiv="Content-Security-Policy"
+          content="upgrade-insecure-requests"
+        />
       </head>
       <body
         className={clsx(

@@ -14,7 +14,7 @@ import {
 } from "@/config";
 const DiscordOauth2 = require("discord-oauth2");
 const { v4: uuidv4 } = require("uuid");
-const uuids = uuidv4();
+let uuids = uuidv4();
 
 export async function GET(req: Request) {
   const code = req.url.split("?code=")[1];
@@ -31,8 +31,8 @@ export async function GET(req: Request) {
     redirectUri: DISCORD_REDIRECTURI,
   });
 
-  const member = await oauth.getUser(data.access_token);
-  const user = await getUser(member.id);
+  let member = await oauth.getUser(data.access_token);
+  let user = await getUser(member.id);
 
   if (process.env.NEXTLOGINOPEN) {
     if (process.env.ADMINID == member.id) {
