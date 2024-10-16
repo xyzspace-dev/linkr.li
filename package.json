@@ -28,7 +28,7 @@
 		"@nextui-org/image": "^2.0.32",
 		"@nextui-org/input": "2.2.5",
 		"@nextui-org/kbd": "2.0.34",
-		"@nextui-org/link": "2.0.35",
+		"@nextui-org/link": "^2.0.35",
 		"@nextui-org/listbox": "2.1.27",
 		"@nextui-org/menu": "^2.0.30",
 		"@nextui-org/modal": "^2.0.41",
@@ -71,6 +71,7 @@
 		"nodemon": "^3.1.7",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
+		"react-toastify": "^10.0.6",
 		"sharp": "^0.33.5",
 		"swr": "^2.2.5",
 		"uuid": "^10.0.0"

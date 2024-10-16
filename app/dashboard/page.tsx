@@ -38,7 +38,7 @@ export default function Home() {
         });
 
         await deleteSession(userData?.UserID);
-        return window.open(process.env.NEXTAPP_URL, "_self");
+        return window.open("/", "_self");
     }
 
 

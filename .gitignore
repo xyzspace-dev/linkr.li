@@ -2,6 +2,7 @@
 
 # linkr.li specific
 config.json
+.VSCodeCounter
 .env
 chromeextension.crx
 chromeextension.pem

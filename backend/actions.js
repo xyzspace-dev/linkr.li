@@ -4,9 +4,13 @@ import { cookies } from "next/headers";
 import sessionDB from "./database/sessionDB";
 import { error } from "console";
 import { Adamina } from "next/font/google";
+import { hostname } from "os";
 const { v4: uuidv4 } = require("uuid");
-const uuids = uuidv4();
 const { MONGODBURL, AUTHURL } = require("@/config");
+function genuuid() {
+  return uuidv4();
+}
+const uuids = genuuid();
 
 async function connectDB() {
   connect(MONGODBURL, {
@@ -147,9 +151,29 @@ async function deleteHost(uuid) {
 
 async function deleteHostLinks(uuid) {
   const linkDB = require("./database/linksDB");
+  const userDB = require("./database/usersDB");
 
-  await linkDB.deleteMany({
-    Host: uuid,
+  const data = await linkDB
+    .find({
+      Host: uuid,
+    })
+    .sort();
+
+  data.forEach(async (link) => {
+    await userDB.findOneAndUpdate(
+      {
+        UserID: link.UserID,
+      },
+      {
+        $pull: {
+          Links: link.UUID,
+        },
+      }
+    );
+
+    await linkDB.deleteMany({
+      Host: uuid,
+    });
   });
 }
 
@@ -158,6 +182,24 @@ async function getLink(link) {
 
   const linkData = await linkDB.findOne({
     Slug: link,
+  });
+
+  return {
+    UUID: linkData?.UUID,
+    UserID: linkData?.UserID,
+    Slug: linkData?.Slug,
+    Redirect: linkData?.Redirect,
+    URL: linkData?.URL,
+    Host: linkData?.Host,
+  };
+}
+
+async function getLinkwithHost(link, host) {
+  const linkDB = require("./database/linksDB");
+
+  const linkData = await linkDB.findOne({
+    Slug: link,
+    Host: host,
   });
 
   return {
@@ -190,13 +232,18 @@ async function getLinks(userID) {
 async function createLink(userID, slug, redirect, uuid, host) {
   const linkDB = require("./database/linksDB");
   const userDB = require("./database/usersDB");
+  const hostDB = require("./database/hostDB");
+
+  const hostData = await hostDB.findOne({
+    UUID: host,
+  });
 
   await linkDB.create({
     UserID: userID,
     UUID: uuid,
     Slug: slug,
     Redirect: redirect,
-    URL: host + "/" + slug,
+    URL: hostData.URL + "/" + slug,
     Host: host,
   });
 
@@ -220,9 +267,7 @@ async function deleteLink(userID, slug) {
     Slug: slug,
   });
 
-  await linkDB.findOneAndDelete({
-    Slug: slug,
-  });
+  console.log(linkData.UUID);
 
   await userDB.findOneAndUpdate(
     {
@@ -234,6 +279,10 @@ async function deleteLink(userID, slug) {
       },
     }
   );
+
+  await linkDB.deleteMany({
+    UUID: linkData.UUID,
+  });
 }
 
 async function getLinkfromAPI(slug, key) {
@@ -370,6 +419,7 @@ export {
   getCookie,
   editLink,
   hasCookie,
+  getLinkwithHost,
   createCookie,
   updateUser,
   getLinkfromAPI,
