@@ -1,15 +1,11 @@
 "use client";
 
+import { redirect } from "next/navigation";
+
 export default function Home() {
   return (
     <>
-      {
-
-        process.env.NEXTDEFAULT_PAGE && (
-          window.open(process.env.NEXTDEFAULT_PAGE, "_self")
-        )
-
-      }
+      {process.env.NEXTDEFAULT_PAGE && redirect(process.env.NEXTDEFAULT_PAGE)}
     </>
   );
 }
