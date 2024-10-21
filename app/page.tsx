@@ -6,7 +6,7 @@ export default function Home() {
       {
 
         process.env.NEXTDEFAULT_PAGE && (
-          window.open(process.env.NEXTDEFAULT_PAGE)
+          window.open(process.env.NEXTDEFAULT_PAGE, "_self")
         )
 
       }
