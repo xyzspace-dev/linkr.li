@@ -170,6 +170,30 @@ export function DashLinks({
     const userID = (document.getElementById("edituserID") as HTMLInputElement)
       .value;
 
+    if (!slug || !redirect) {
+      toast("Please fill in all required fields", {
+        type: "error",
+      });
+      setLoadCreated(false);
+      return;
+    }
+
+    if (slug.startsWith("http") || slug.startsWith("https")) {
+      toast("Slug cannot be a URL", {
+        type: "error",
+      });
+      setLoadCreated(false);
+      return;
+    }
+
+    if (slug.startsWith("/")) {
+      toast("Slug cannot start with a forward slash", {
+        type: "error",
+      });
+      setLoadCreated(false);
+      return;
+    }
+
     if (redirect === "") {
       toast("Please fill in all required fields", {
         type: "error",
@@ -256,11 +280,12 @@ export function DashLinks({
                             htmlFor="redirect"
                             className="text-xl font-semibold text-gray-100"
                           >
-                            Redirect
+                            Redirect<p className="text-red-600 inline uppercase">*</p>
                           </label>
                           <input
                             type="text"
                             id="redirect"
+                            required
                             name="redirect"
                             placeholder="Enter redirect URL"
                             className="text-sm w-full px-4 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -274,11 +299,13 @@ export function DashLinks({
                             htmlFor="slug"
                             className="text-xl font-semibold text-gray-100"
                           >
-                            Slug
+                            Slug<p className="text-red-600 inline uppercase">*</p>
                           </label>
                           <input
                             type="text"
+                            required
                             id="slug"
+                            value={uuidv4().slice(0, 8)}
                             name="slug"
                             placeholder="Enter a custom slug"
                             className="text-sm w-full px-4 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
