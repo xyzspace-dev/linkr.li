@@ -75,9 +75,14 @@ export function DashLinks({
   const [getHost, setHost] = useState<Hosts[]>([]);
   const [modalId, setModalId] = useState<string | null>(null);
   const [loadCreated, setLoadCreated] = useState(false);
+  const [slug, setSlug] = useState("");
 
   const trimEllip = function (text: string, length: number) {
     return text.length > length ? text.substring(0, length) + "..." : text;
+  };
+
+  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSlug(e.target.value);
   };
 
   const handleOpen = (id: string) => {
@@ -213,6 +218,10 @@ export function DashLinks({
     return;
   };
 
+  const genSlug = async () => {
+    setSlug(uuidv4().slice(0, 8));
+  };
+
   return (
     <>
       <div>
@@ -280,7 +289,8 @@ export function DashLinks({
                             htmlFor="redirect"
                             className="text-xl font-semibold text-gray-100"
                           >
-                            Redirect<p className="text-red-600 inline uppercase">*</p>
+                            Redirect
+                            <p className="text-red-600 inline uppercase">*</p>
                           </label>
                           <input
                             type="text"
@@ -299,17 +309,27 @@ export function DashLinks({
                             htmlFor="slug"
                             className="text-xl font-semibold text-gray-100"
                           >
-                            Slug<p className="text-red-600 inline uppercase">*</p>
+                            Slug
+                            <p className="text-red-600 inline uppercase">*</p>
                           </label>
                           <input
                             type="text"
                             required
                             id="slug"
-                            value={uuidv4().slice(0, 8)}
+                            value={slug}
                             name="slug"
                             placeholder="Enter a custom slug"
                             className="text-sm w-full px-4 py-2 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          />
+                            onChange={handleSlugChange}
+                          />{" "}
+                          <button
+                            type="button"
+                            className=" border border-transparent bg-gray-700 rounded-xl px-2 py-1 text-white font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            onClick={genSlug}
+                          >
+                            {" "}
+                            <Icon name="bx-refresh" size={"20px"} />
+                          </button>
                         </div>
                       </Tooltip>
 
