@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install app dependencies
 COPY . /app
-RUN cd /app && npm install -g npm@latest
+# RUN cd /app && npm install -g npm@latest
 RUN cd /app && npm install --force
 
 ENV URL_SERVER_PORT=0
