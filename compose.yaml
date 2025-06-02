@@ -1,0 +1,7 @@
+﻿services:
+  linkr.li:
+    image: linkr.li
+    build:
+      context: .
+      dockerfile: Linkr.li/Dockerfile
+
